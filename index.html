@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Midnight Racing Tokyo コード一覧</title>
+<style>
+body{
+background:#111;
+color:white;
+font-family:sans-serif;
+padding:20px;
+}
+table{
+border-collapse:collapse;
+width:100%;
+}
+th,td{
+border:1px solid #555;
+padding:10px;
+text-align:center;
+}
+th{
+background:#222;
+}
+</style>
+</head>
+
+<body>
+
+<h1>最新プロモーションコード</h1>
+
+<table id="codeTable">
+<tr>
+<th>コード</th>
+<th>報酬</th>
+<th>期限</th>
+</tr>
+</table>
+
+<script>
+fetch("codes.json")
+.then(res=>res.json())
+.then(data=>{
+const table=document.getElementById("codeTable");
+
+data.forEach(code=>{
+const row=table.insertRow();
+row.insertCell().textContent=code.name;
+row.insertCell().textContent=code.reward;
+row.insertCell().textContent=code.expire;
+});
+});
+</script>
+
+</body>
+</html>
