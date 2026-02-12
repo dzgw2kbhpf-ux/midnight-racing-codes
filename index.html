@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Midnight Racing Tokyo コード一覧</title>
+
+<style>
+body{
+background:#111;
+color:white;
+font-family:sans-serif;
+padding:20px;
+}
+table{
+border-collapse:collapse;
+width:100%;
+}
+th,td{
+border:1px solid #555;
+padding:10px;
+text-align:center;
+}
+th{background:#222;}
+button{
+background:#00c853;
+border:none;
+color:white;
+padding:6px 12px;
+cursor:pointer;
+}
+.new{
+color:#ff5252;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>最新プロモーションコード</h1>
+
+<table id="codeTable">
+<tr>
+<th>コード</th>
+<th>報酬</th>
+<th>使用期間</th>
+<th>残り時間</th>
+<th></th>
+</tr>
+</table>
+
+<script>
+
+function daysBetween(a,b){
+return Math.floor((b-a)/(1000*60*60*24));
+}
+
+function countdown(end){
+const now=new Date();
+const diff=new Date(end)-now;
+
+if(diff<=0) return "期限切れ";
+
+const d=Math.floor(diff/86400000);
+const h=Math.floor((diff%86400000)/3600000);
+
+return `${d}日 ${h}時間`;
+}
+
+fetch("codes.json")
+.then(r=>r.json())
+.then(data=>{
+
+const table=document.getElementById("codeTable");
+const today=new Date();
+
+data.forEach(code=>{
+
+const row=table.insertRow();
+
+const added=new Date(code.added);
+const isNew=daysBetween(added,today)<=7;
+
+row.insertCell().innerHTML=
+code.name+(isNew?" <span class='new'>NEW</span>":"");
+
+row.insertCell().textContent=code.reward;
+
+row.insertCell().textContent=
+code.start+" ～ "+code.end;
+
+row.insertCell().textContent=countdown(code.end);
+
+const btn=row.insertCell();
+btn.innerHTML="<button>コピー</button>";
+
+btn.onclick=()=>{
+navigator.clipboard.writeText(code.name);
+alert("コピーしました");
+};
+
+});
+
+});
+</script>
+
+</body>
+</html>
